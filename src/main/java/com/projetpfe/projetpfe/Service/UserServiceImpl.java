@@ -6,6 +6,7 @@ import com.projetpfe.projetpfe.Models.UserRole;
 import com.projetpfe.projetpfe.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -16,9 +17,12 @@ public class UserServiceImpl implements UserServiceInterf{
 
     @Autowired
     private UserRepository userRepository;
-
+    private PasswordEncoder passwordEncoder;
     String ch;
-
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
     @Override
     public List<UserEntity> getAllUsers() {
         return userRepository.findAll();
@@ -37,10 +41,16 @@ public class UserServiceImpl implements UserServiceInterf{
 
     public UserEntity updateUser(Long idUser, UserEntity userEntity) {
         UserEntity usr = userRepository.findById(idUser)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Utilisateur introuvable avec l'ID : " + idUser));
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Utilisateur introuvable avec l'ID : " + idUser));
 
         usr.setUsername(userEntity.getUsername());
-        usr.setPassword(userEntity.getPassword());
+
+        // Vérifiez si un nouveau mot de passe a été fourni et hachez-le s'il y en a un
+        if (userEntity.getPassword() != null && !userEntity.getPassword().isEmpty()) {
+            String hashedPassword = passwordEncoder.encode(userEntity.getPassword());
+            usr.setPassword(hashedPassword);
+        }
+
         usr.setRole(userEntity.getRole());
 
         Profil userProfil = userEntity.getProfil();

@@ -1,4 +1,6 @@
 package com.projetpfe.projetpfe.Models;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
@@ -20,29 +22,27 @@ public class UserEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long idUser;
     private String username;
+    @Column(unique = true)
     private String email;
-    private String password ;
+    private String password;
     @Temporal(TemporalType.DATE)
     private Date createdDate;
     @Enumerated(EnumType.STRING)
-    private UserRole role ;
-
-
+    private UserRole role;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-    @JsonManagedReference // Désactive la sérialisation JSON pour cette référence
-    private Profil profil;
 
+    private Profil profil;
 
     //image
     @OneToOne(mappedBy = "user")
-    @JsonManagedReference // Désactive la sérialisation JSON pour cette référence
+
     private Image image;
 
     //Quiz
     @OneToMany(mappedBy = "Enseignant")
-    private List<Quiz> quizzes; // Les quizzes proposés par l'enseignant
 
+    private List<Quiz> quizzes;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Role> roles = new ArrayList<>();

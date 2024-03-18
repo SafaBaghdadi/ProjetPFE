@@ -1,5 +1,6 @@
 package com.projetpfe.projetpfe.Models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -33,11 +34,13 @@ public class Courses {
 
         // Relation avec les utilisateurs (parents ou enfants) autorisés à consulter le cours
         @ManyToMany(mappedBy = "coursAutorises")
+
+
         private List<UserEntity> utilisateursAutorises;
 
         //image
         @OneToOne(mappedBy = "cours")
-        @JsonManagedReference // Désactive la sérialisation JSON pour cette référence
+
         private Image image;
 
 

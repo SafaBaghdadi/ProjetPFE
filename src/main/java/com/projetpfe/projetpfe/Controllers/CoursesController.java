@@ -21,5 +21,6 @@ public class CoursesController {
             Courses nouveauCours = coursServ.addCourses(cours);
             return ResponseEntity.ok().body(nouveauCours);
         }
+
     }
 

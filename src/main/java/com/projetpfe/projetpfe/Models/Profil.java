@@ -2,6 +2,8 @@ package com.projetpfe.projetpfe.Models;
 
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
@@ -26,7 +28,7 @@ public class Profil {
 
     @OneToOne
     @JoinColumn(name = "user_id")
-    @JsonBackReference // Désactive la sérialisation JSON pour cette référence
+
     private UserEntity user;
 
 

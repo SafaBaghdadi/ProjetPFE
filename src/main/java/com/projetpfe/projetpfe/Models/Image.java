@@ -1,5 +1,6 @@
 package com.projetpfe.projetpfe.Models;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -26,12 +27,11 @@ public class Image implements Serializable  {
 
     @OneToOne
     @JoinTable(name ="UserImage")
-    @JsonBackReference // Désactive la sérialisation JSON pour cette référence
+   @JsonBackReference
     private UserEntity user;
 
     @OneToOne
     @JoinTable(name ="CousesImage")
-    @JsonBackReference // Désactive la sérialisation JSON pour cette référence
     private Courses cours;
 
 }
