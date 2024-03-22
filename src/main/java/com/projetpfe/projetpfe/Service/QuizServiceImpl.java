@@ -19,6 +19,7 @@ public class QuizServiceImpl implements QuizSeviceInterf{
 
     // Méthode pour créer un nouveau quiz
     public Quiz createQuiz(Quiz quiz) {
+
         return quizRepository.save(quiz);
     }
 
@@ -39,7 +40,7 @@ public class QuizServiceImpl implements QuizSeviceInterf{
     public Quiz updateQuiz(Long idQuiz, Quiz quiz) {
         Quiz quizze = getQuizById(idQuiz);
         quizze.setTitle(quiz.getTitle());
-        quizze.setDescription(quiz.getDescription());
+        quizze.setQuestion(quiz.getQuestion());
 
         return quizRepository.save(quiz);
     }

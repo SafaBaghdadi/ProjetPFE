@@ -6,6 +6,7 @@ import com.projetpfe.projetpfe.DTO.RegisterDTO;
 import com.projetpfe.projetpfe.Models.Profil;
 import com.projetpfe.projetpfe.Models.UserEntity;
 import com.projetpfe.projetpfe.Models.UserRole;
+import com.projetpfe.projetpfe.Repository.ProfilRepository;
 import com.projetpfe.projetpfe.Repository.RoleRepository;
 import com.projetpfe.projetpfe.Repository.UserRepository;
 import com.projetpfe.projetpfe.Security.CustomUserDetailsService;
@@ -41,7 +42,7 @@ public class UserController {
 
 
 
-    @GetMapping
+    @GetMapping("/getAll")
     public List<UserEntity> getAllUsers() {
 
         return userServ.getAllUsers();
@@ -68,6 +69,8 @@ public class UserController {
         return userServ.deleteUser(idUser);
     }
 
+
+    private final ProfilRepository profilRepository;
     private final AuthenticationManager authenticationManager;
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
@@ -76,7 +79,7 @@ public class UserController {
     private final CustomUserDetailsService userDetailsService;
 
     @Autowired
-    public UserController(AuthenticationManager authenticationManager, UserRepository userRepository,
+    public UserController(ProfilRepository profilRepository,AuthenticationManager authenticationManager, UserRepository userRepository,
                           RoleRepository roleRepository, PasswordEncoder passwordEncoder, JWTGenerator jwtGenerator,
                           CustomUserDetailsService userDetailsService) {
         this.authenticationManager = authenticationManager;
@@ -84,13 +87,12 @@ public class UserController {
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtGenerator = jwtGenerator;
-
+        this.profilRepository = profilRepository;
         this.userDetailsService = userDetailsService;
     }
 
 
 
-        //register
     @PostMapping("register")
 
     public ResponseEntity<String> register(@RequestBody RegisterDTO registerDto) {
@@ -139,7 +141,7 @@ public class UserController {
                 profil.setPhoneNumber(registerDto.getPhoneNumber());
             } else if (registerDto.getRole() == UserRole.ELEVE) {
                 profil.setAge(registerDto.getAge());
-                }
+            }
 
             profil.setUser(user); // Associer le profil à l'utilisateur
 
@@ -153,9 +155,7 @@ public class UserController {
         } catch (Exception e) {
             // Gérer d'autres exceptions
             return new ResponseEntity<>("An error occurred during registration", HttpStatus.INTERNAL_SERVER_ERROR);
-    }}
-
-
+        }}
 
     @PostMapping("login")
     public ResponseEntity<?> login(@RequestBody @NotNull LoginDTO loginDto) {

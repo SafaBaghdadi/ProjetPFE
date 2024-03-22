@@ -25,13 +25,13 @@ public class Image implements Serializable  {
     @Column(name = "picByte", columnDefinition  = "LONGBLOB")
     byte[] picByte;
 
-    @OneToOne
-    @JoinTable(name ="UserImage")
-   @JsonBackReference
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name ="user_id")
+    @JsonBackReference
     private UserEntity user;
 
-    @OneToOne
-    @JoinTable(name ="CousesImage")
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "courses_id")
     private Courses cours;
 
 }

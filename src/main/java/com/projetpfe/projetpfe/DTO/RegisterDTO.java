@@ -10,9 +10,9 @@ import java.util.regex.Pattern;
 
 @Data
 public class RegisterDTO {
-    @JsonProperty("firstname")
+
     private String firstname;
-    @JsonProperty("lastname")
+
     private String lastname;
 
     private String username;
@@ -21,12 +21,11 @@ public class RegisterDTO {
 
     private String password;
 
-    // Ignorer les attributs qui ne sont pas pertinents pour un type d'utilisateur donné
-    @JsonIgnore
+
     private String matiere;
-    @JsonIgnore
+
     private String phoneNumber;
-    @JsonIgnore
+
     private Integer age;
 
 

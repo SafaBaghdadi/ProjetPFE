@@ -24,6 +24,8 @@ public class Courses {
 
         private String title;
         private String description;
+        private String prix;
+        private String dure;
 
 
         //enseignant
@@ -39,10 +41,7 @@ public class Courses {
         private List<UserEntity> utilisateursAutorises;
 
         //image
-        @OneToOne(mappedBy = "cours")
-
+        @OneToOne(mappedBy = "cours", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
         private Image image;
-
-
 
 }

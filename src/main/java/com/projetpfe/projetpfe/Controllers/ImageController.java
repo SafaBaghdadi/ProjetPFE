@@ -1,7 +1,9 @@
 package com.projetpfe.projetpfe.Controllers;
 
+import com.projetpfe.projetpfe.Models.Courses;
 import com.projetpfe.projetpfe.Models.Image;
 import com.projetpfe.projetpfe.Models.UserEntity;
+import com.projetpfe.projetpfe.Repository.CoursesRepository;
 import com.projetpfe.projetpfe.Repository.ImageRepository;
 import com.projetpfe.projetpfe.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,14 +19,19 @@ import java.util.zip.Deflater;
 import java.util.zip.Inflater;
 
 @RestController
-@RequestMapping("/Image")
+@RequestMapping("/api/auth")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class ImageController {
     @Autowired
     ImageRepository imageRepository;
     @Autowired
     UserRepository userRepository ;
-    @PostMapping("/upload/{idUser}")
+    @Autowired
+    CoursesRepository coursesRepository ;
+
+
+    //userImage
+    @PostMapping("/upload/user/{idUser}")
     public ResponseEntity<String> uploadImage(@RequestParam("imageFile") MultipartFile file, @PathVariable Long idUser)
     {
         try {
@@ -53,7 +60,7 @@ public class ImageController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
-    @GetMapping("/getImage/{idUser}")
+    @GetMapping("/getImage/user/{idUser}")
     public ResponseEntity<Image> getImageByidUser(@PathVariable Long idUser) {
         Optional<UserEntity> userOptional = userRepository.findById(idUser);
 
@@ -70,6 +77,48 @@ public class ImageController {
         } else {
             return ResponseEntity.notFound().build();
         }}
+
+
+    //CoursesImage
+    @PostMapping("/upload/cours/{idCourses}")
+    public ResponseEntity<String> uploadImageCourses(@RequestParam("imageFile") MultipartFile file, @PathVariable Long idCourses) {
+        try {
+            Optional<Courses> coursesOptional = coursesRepository.findByIdCourses(idCourses);
+
+            if (coursesOptional.isPresent()) {
+                Courses courses = coursesOptional.get();
+                if (coursesOptional.get().getImage() != null) {
+                    return ResponseEntity.badRequest().body("Courses already has an image");
+                }
+                Image img = new Image();
+                img.setNamePict(file.getOriginalFilename());
+                img.setPicByte(compressBytes(file.getBytes()));
+                img.setCours(coursesOptional.get());
+                imageRepository.save(img);
+                return ResponseEntity.ok("Image ( " + img.getNamePict() + " ) added to course with ID: " + img.getCours().getIdCourses());
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
+    @GetMapping("/getImage/cours/{idCourses}")
+    public ResponseEntity<Image> getImageByidCourses(@PathVariable Long idCourses) {
+        Optional<Image> imageOptional = imageRepository.findByCoursIdCourses(idCourses);
+
+        if (imageOptional.isPresent()) {
+            Image img = imageOptional.get();
+            img.setPicByte(decompressBytes(img.getPicByte()));
+            return ResponseEntity.ok(img);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+
+
 
     // compress the image bytes before storing it in the database
     public static byte[] compressBytes(byte[] data) {

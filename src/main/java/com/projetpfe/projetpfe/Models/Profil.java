@@ -28,8 +28,7 @@ public class Profil {
 
     @OneToOne
     @JoinColumn(name = "user_id")
-
+    @JsonBackReference
     private UserEntity user;
-
 
 }

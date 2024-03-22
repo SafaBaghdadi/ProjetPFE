@@ -19,8 +19,10 @@ public class Quiz {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idQuiz;
     private String title;
-    private String description;
-
+    private String Question;
+    private String reponse1;
+    private String reponse2;
+    private String reponse3;
 
     @ManyToOne
     @JoinColumn(name = "Enseignant_id")
